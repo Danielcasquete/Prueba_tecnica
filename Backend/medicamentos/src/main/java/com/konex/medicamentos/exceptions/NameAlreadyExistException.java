@@ -1,4 +1,4 @@
-package com.konex.medicamentos.Exceptions;
+package com.konex.medicamentos.exceptions;
 
 public class NameAlreadyExistException extends RuntimeException{
 }

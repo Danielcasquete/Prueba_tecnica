@@ -1,6 +1,5 @@
-package com.konex.medicamentos.Exceptions;
+package com.konex.medicamentos.exceptions;
 
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.ValidationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.FieldError;

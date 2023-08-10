@@ -39,7 +39,6 @@ public class MedicamentosController {
         return ResponseEntity.status(HttpStatus.OK).body(service.findByName(medicamento));
     }
 
-    //find by birthday between from - to -> /api/Users/birthday/2028-02-03/2030-07-02
     @GetMapping(value = "/FechaVencimiento/{from}/{to}")
     public ResponseEntity<Optional<List<Medicamentos>>> findByBirthday(@PathVariable ("from") @DateTimeFormat(pattern = "yyyy-MM-dd") Calendar from, @PathVariable ("to") @DateTimeFormat(pattern = "yyyy-MM-dd") Calendar to) {
         return ResponseEntity.status(HttpStatus.OK).body(service.findByfechaVencimiento(from,to));

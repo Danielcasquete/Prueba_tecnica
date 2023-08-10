@@ -1,6 +1,6 @@
 package com.konex.medicamentos.service;
 
-import com.konex.medicamentos.Exceptions.NameAlreadyExistException;
+import com.konex.medicamentos.exceptions.NameAlreadyExistException;
 import com.konex.medicamentos.model.Medicamentos;
 import com.konex.medicamentos.repository.IMedicamentosRepository;
 import org.springframework.beans.factory.annotation.Autowired;
