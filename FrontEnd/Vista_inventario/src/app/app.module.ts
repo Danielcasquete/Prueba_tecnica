@@ -15,6 +15,9 @@ import { DialogModule } from 'primeng/dialog';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { HttpClientModule } from '@angular/common/http';
+import { FormsModule } from '@angular/forms';
+import { MessageService } from 'primeng/api';
+import { InputTextModule } from 'primeng/inputtext';
 
 @NgModule({
   declarations: [
@@ -34,9 +37,11 @@ import { HttpClientModule } from '@angular/common/http';
     DialogModule,
     InputNumberModule,
     ConfirmDialogModule,
-    HttpClientModule
+    HttpClientModule,
+    FormsModule,
+    InputTextModule
   ],
-  providers: [],
+  providers: [MessageService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
