@@ -18,6 +18,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { MessageService } from 'primeng/api';
 import { InputTextModule } from 'primeng/inputtext';
+import { CalendarModule } from 'primeng/calendar';
 
 @NgModule({
   declarations: [
@@ -39,7 +40,8 @@ import { InputTextModule } from 'primeng/inputtext';
     ConfirmDialogModule,
     HttpClientModule,
     FormsModule,
-    InputTextModule
+    InputTextModule,
+    CalendarModule
   ],
   providers: [MessageService],
   bootstrap: [AppComponent]

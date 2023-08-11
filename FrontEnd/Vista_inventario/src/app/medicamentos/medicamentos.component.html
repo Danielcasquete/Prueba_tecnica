@@ -1,7 +1,7 @@
 <p-toast></p-toast>
 <p-toolbar styleClass="mb-4 gap-2">
     <ng-template pTemplate="left">
-        <button pButton pRipple label="New" icon="pi pi-plus" class="p-button-success mr-2" (click)="showProductDialog()"></button>
+        <button pButton pRipple label="Nuevo Medicamento" icon="pi pi-plus" class="p-button-success mr-2" (click)="showProductDialog()"></button>
     </ng-template>
 </p-toolbar>
 <p-table     
@@ -18,16 +18,17 @@
     [showCurrentPageReport]="true">
     <ng-template pTemplate="caption">
         <div class="flex align-items-center justify-content-between">
-            <h5 class="m-0">Manejo de Medicamentos</h5>
+            <h3 class="m-0">Manejo de Medicamentos</h3>
             <span class="p-input-icon-left">
                 <i class="pi pi-search"></i>
-                <input pInputText type="text" [(ngModel)]="searchTerm" (input)="dt.filterGlobal(searchTerm, 'contains')" placeholder="Search..." />
+                <input pInputText type="text" [(ngModel)]="searchTerm" (input)="dt.filterGlobal(searchTerm, 'contains')" placeholder="Buscar en Tabla..." />
 
             </span>
         </div>
     </ng-template>
     <ng-template pTemplate="header">
         <tr>
+            <th pSortableColumn="id">Id<p-sortIcon field="id"></p-sortIcon></th>
             <th pSortableColumn="nombre">Nombre<p-sortIcon field="nombre"></p-sortIcon></th>
             <th pSortableColumn="laboratorio">Laboratorio<p-sortIcon field="laboratorio"></p-sortIcon></th>
             <th pSortableColumn="fechaFabricacion">Fecha Fabricacion<p-sortIcon field="fechaFabricacion"></p-sortIcon></th>
@@ -38,6 +39,7 @@
     </ng-template>
     <ng-template pTemplate="body" let-product>
         <tr>
+            <td>{{ product.id }}</td>
             <td>{{ product.nombre }}</td>
             <td>{{ product.laboratorio }}</td>
             <td>{{ product.fechaFabricacion }}</td>
@@ -57,7 +59,7 @@
     <ng-template pTemplate="content">
         <div style="margin-bottom: 20px;"></div>
         <span class="p-float-label">
-            <input pInputText id="nombre" [(ngModel)]="newMedicamento.nombre" required autofocus/>
+            <input pInputText id="nombre"  [(ngModel)]="newMedicamento.nombre" required autofocus/>
             <label htmlFor="nombre">Nombre</label>
         </span>
         <div style="margin-bottom: 20px;"></div>
@@ -67,12 +69,14 @@
         </span>
         <div style="margin-bottom: 20px;"></div>
         <span class="p-float-label">
-            <input pInputText id="fechaFabricacion" [(ngModel)]="newMedicamento.fechaFabricacion" required autofocus/>
+            <p-calendar [appendTo]="'body'" [(ngModel)]="newMedicamento.fechaFabricacion" dateFormat="yy-mm-dd"
+            [showIcon]="true" ></p-calendar>
             <label htmlFor="fechaFabricacion">Fecha Fabricacion</label>
         </span>
         <div style="margin-bottom: 20px;"></div>
         <span class="p-float-label">
-            <input pInputText id="fechaVencimiento" [(ngModel)]="newMedicamento.fechaVencimiento" required autofocus/>
+            <p-calendar [appendTo]="'body'" [(ngModel)]="newMedicamento.fechaVencimiento" dateFormat="yy-mm-dd"
+            [showIcon]="true"></p-calendar>
             <label htmlFor="fechaVencimiento">Fecha Vencimiento</label>
         </span>
 
@@ -102,19 +106,21 @@
            
             
             <span class="p-input-icon-left">
-                <i class="pi pi-search"></i>
-                <input pInputText type="number" [(ngModel)]="cantidad" (input)="calcularTotal()" placeholder="Cantidad..." />
+                <i class="pi pi-shopping-bag"></i>
+                <input pInputText type="number" [(ngModel)]="cantidad"
+                (ngModelChange)="limitarCantidad()" placeholder="Cantidad..." [max]="selectedMedicamento?.cantidad || 0" [min]="0"
+                pattern="\d*" inputmode="numeric" />
             </span>
-            <p>Total: {{ total | currency:'COP' }}</p>
+            <small class="p-error" *ngIf="excedeLimite">Supera el límite de cantidad del producto</small>
+            
         </div>
+        <p>Total: {{ total | currency:'COP' }}</p>
     </ng-template>
     <ng-template pTemplate="footer">
         <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text" (click)="hideSellDialog()"></button>
         <button pButton pRipple label="Save" icon="pi pi-check" class="p-button-text" (click)="selectedMedicamento && realizarVenta(selectedMedicamento)"></button>
     </ng-template>
 </p-dialog>
-
-
 
 
 

@@ -3,6 +3,7 @@ import { ApiService } from '../servicio/api.servicio'; // Importa el servicio
 import { Medicamento } from '../dto/medicamento.dto'; // Importa el modelo
 import { Table } from 'primeng/table';
 import { MessageService } from 'primeng/api';
+import { ChangeDetectorRef } from '@angular/core';
 
 
 @Component({
@@ -12,17 +13,19 @@ import { MessageService } from 'primeng/api';
 })
 export class MedicamentosComponent implements OnInit {
   @ViewChild('dt') dt!: Table;
+
   products: Medicamento[] = [];
   searchTerm: string = '';
   selectedMedicamento: Medicamento | null = null;
   productDialog: boolean = false;
   sellDialog: boolean = false;
+  excedeLimite: boolean = false;
   newMedicamento: Medicamento = {
     id: 0,
     nombre: '',
     laboratorio: '',
-    fechaFabricacion: '',
-    fechaVencimiento: '',
+    fechaFabricacion: null ,
+    fechaVencimiento: null,
     cantidad: 0,
     valorUnitario: 0
   };
@@ -31,7 +34,7 @@ export class MedicamentosComponent implements OnInit {
   total: number = 0;
   submitted = false;
 
-  constructor(private apiService: ApiService, private messageService: MessageService) { } // Usa el servicio ApiService
+  constructor(private apiService: ApiService, private messageService: MessageService, private cdr: ChangeDetectorRef) { } // Usa el servicio ApiService
 
   ngOnInit(): void {
     this.fetchMedicamentos();
@@ -54,8 +57,8 @@ export class MedicamentosComponent implements OnInit {
       id: 0,
       nombre: '',
       laboratorio: '',
-      fechaFabricacion: '',
-      fechaVencimiento: '',
+      fechaFabricacion: null,
+      fechaVencimiento: null,
       cantidad: 0,
       valorUnitario: 0
     };
@@ -113,12 +116,15 @@ export class MedicamentosComponent implements OnInit {
 
   hideSellDialog(): void {
     this.sellDialog = false;
-    
+    this.excedeLimite = false
   }
 
   realizarVenta(product: Medicamento): void {
     if (this.cantidad <= 0) {
       this.messageService.add({ severity: 'warn', summary: 'Advertencia', detail: 'La cantidad debe ser mayor a 0.' });
+      return;
+    } if (this.selectedMedicamento && this.cantidad > this.selectedMedicamento.cantidad) {
+      this.messageService.add({ severity: 'warn', summary: 'Advertencia', detail: 'La cantidad no debe superar la cantidad de stock.' });
       return;
     }
 
@@ -136,6 +142,27 @@ export class MedicamentosComponent implements OnInit {
     }
   }
 
-  
+  limitarCantidad(): void {
+
+      if (this.selectedMedicamento) {
+        if (this.cantidad > this.selectedMedicamento.cantidad) {
+            this.excedeLimite = true
+        }else if (this.cantidad < 0) {
+          this.cantidad = 0;
+      }else if (this.cantidad == null){
+
+      }else {
+        this.calcularTotal();
+        this.excedeLimite = false
+      }
+      this.cdr.detectChanges(); // Forzar la detección de cambios
+      
+    }
+
+
+}
+
+
+
 
 }

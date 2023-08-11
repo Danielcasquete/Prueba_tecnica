@@ -1,4 +1,4 @@
-export interface VentaDTO {
+export interface Venta {
     id: number;
     fechaVenta: string;
     idMedicamento: number;

@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Medicamento } from '../dto/medicamento.dto';
+import { Venta } from '../dto/venta.dto';
 
 @Injectable({
   providedIn: 'root'
@@ -34,6 +35,14 @@ export class ApiService {
 
   hacerVenta(idMedicamento: number, cantidad: number): Observable<any> {
     return this.http.post(`${this.baseUrl2}/Inventario/HacerVenta/${idMedicamento}/${cantidad}`, {});
+  }
+
+  getAllVentas(): Observable<Venta[]> {
+    return this.http.get<Venta[]>(`${this.baseUrl2}/Inventario/all`);
+  }
+
+  getVentasByFecha(from: String, to: String): Observable<Venta[]> {
+    return this.http.get<Venta[]>(`${this.baseUrl2}/Inventario/FechaVenta/${from}/${to}`);
   }
 
 }
