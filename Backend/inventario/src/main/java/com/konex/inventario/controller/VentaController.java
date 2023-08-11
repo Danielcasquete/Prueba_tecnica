@@ -3,7 +3,6 @@ package com.konex.inventario.controller;
 import com.konex.inventario.dto.MedicamentoDTO;
 import com.konex.inventario.model.Venta;
 import com.konex.inventario.service.VentaService;
-import jakarta.validation.ValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -19,6 +18,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/Inventario")
+@CrossOrigin(origins = "http://localhost:4200")
 public class VentaController {
     @Autowired
     private VentaService service;

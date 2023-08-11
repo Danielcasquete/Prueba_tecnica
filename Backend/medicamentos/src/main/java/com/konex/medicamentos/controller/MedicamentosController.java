@@ -16,6 +16,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/Medicamentos")
+@CrossOrigin(origins = "http://localhost:4200")
 public class MedicamentosController {
 
     @Autowired
