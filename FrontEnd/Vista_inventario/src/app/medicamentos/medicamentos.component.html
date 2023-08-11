@@ -1,0 +1,126 @@
+<p-toast></p-toast>
+<p-toolbar styleClass="mb-4 gap-2">
+    <ng-template pTemplate="left">
+        <button pButton pRipple label="Nuevo Medicamento" icon="pi pi-plus" class="p-button-success mr-2" (click)="showProductDialog()"></button>
+    </ng-template>
+</p-toolbar>
+<p-table     
+    #dt
+    [value]="products"
+    [rows]="10"
+    [paginator]="true"
+    [rowsPerPageOptions]="[10, 25, 50]"
+    [globalFilterFields]="['nombre', 'laboratorio', 'fechaFabricacion', 'fechaVencimiento', 'cantidad', 'valorUnitario']"
+    [tableStyle]="{ 'min-width': '75rem' }"
+    [rowHover]="true"
+    dataKey="id"
+    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+    [showCurrentPageReport]="true">
+    <ng-template pTemplate="caption">
+        <div class="flex align-items-center justify-content-between">
+            <h3 class="m-0">Manejo de Medicamentos</h3>
+            <span class="p-input-icon-left">
+                <i class="pi pi-search"></i>
+                <input pInputText type="text" [(ngModel)]="searchTerm" (input)="dt.filterGlobal(searchTerm, 'contains')" placeholder="Buscar en Tabla..." />
+
+            </span>
+        </div>
+    </ng-template>
+    <ng-template pTemplate="header">
+        <tr>
+            <th pSortableColumn="id">Id<p-sortIcon field="id"></p-sortIcon></th>
+            <th pSortableColumn="nombre">Nombre<p-sortIcon field="nombre"></p-sortIcon></th>
+            <th pSortableColumn="laboratorio">Laboratorio<p-sortIcon field="laboratorio"></p-sortIcon></th>
+            <th pSortableColumn="fechaFabricacion">Fecha Fabricacion<p-sortIcon field="fechaFabricacion"></p-sortIcon></th>
+            <th pSortableColumn="fechaVencimiento">Fecha Vencimiento<p-sortIcon field="fechaVencimiento"></p-sortIcon></th>
+            <th pSortableColumn="cantidad">Cantidad<p-sortIcon field="cantidad"></p-sortIcon></th>
+            <th pSortableColumn="valorUnitario">Valor Unitario<p-sortIcon field="valorUnitario"></p-sortIcon></th>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-product>
+        <tr>
+            <td>{{ product.id }}</td>
+            <td>{{ product.nombre }}</td>
+            <td>{{ product.laboratorio }}</td>
+            <td>{{ product.fechaFabricacion }}</td>
+            <td>{{ product.fechaVencimiento }}</td>
+            <td>{{ product.cantidad }}</td>
+            <td>{{ product.valorUnitario }}</td>
+            <td>
+                <button pButton pRipple icon="pi pi-shopping-cart" class="p-button-rounded p-button-info mr-2" (click)="sellMedicament(product)"></button>
+                <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2" (click)="editMedicament(product)"></button>
+                <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger" (click)="deleteMedicament(product)"></button>
+            </td>
+        </tr>
+    </ng-template>
+</p-table>
+
+<p-dialog [(visible)]="productDialog" [style]="{ width: '450px' }" header="Detalles Medicamento" [modal]="true" styleClass="p-fluid">
+    <ng-template pTemplate="content">
+        <div style="margin-bottom: 20px;"></div>
+        <span class="p-float-label">
+            <input pInputText id="nombre"  [(ngModel)]="newMedicamento.nombre" required autofocus/>
+            <label htmlFor="nombre">Nombre</label>
+        </span>
+        <div style="margin-bottom: 20px;"></div>
+        <span class="p-float-label">
+            <input pInputText id="laboratorio" [(ngModel)]="newMedicamento.laboratorio" required autofocus/>
+            <label htmlFor="laboratorio">Laboratorio</label>
+        </span>
+        <div style="margin-bottom: 20px;"></div>
+        <span class="p-float-label">
+            <p-calendar [appendTo]="'body'" [(ngModel)]="newMedicamento.fechaFabricacion" dateFormat="yy-mm-dd"
+            [showIcon]="true" ></p-calendar>
+            <label htmlFor="fechaFabricacion">Fecha Fabricacion</label>
+        </span>
+        <div style="margin-bottom: 20px;"></div>
+        <span class="p-float-label">
+            <p-calendar [appendTo]="'body'" [(ngModel)]="newMedicamento.fechaVencimiento" dateFormat="yy-mm-dd"
+            [showIcon]="true"></p-calendar>
+            <label htmlFor="fechaVencimiento">Fecha Vencimiento</label>
+        </span>
+
+        <div class="formgrid grid">
+            <div class="field col">
+                <label class="font-bold block mb-2" for="cantidad">Cantidad</label>
+                <p-inputNumber inputId="cantidad" [(ngModel)]="newMedicamento.cantidad"></p-inputNumber>
+            </div>
+            <div class="field col">
+                <label class="font-bold block mb-2" for="valor">Valor unitario</label>
+                <p-inputNumber inputId="valor" [(ngModel)]="newMedicamento.valorUnitario" mode="currency" currency="COP" locale="es-CO"></p-inputNumber>
+            </div>
+        </div>
+    </ng-template>
+
+    <ng-template pTemplate="footer">
+        <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text" (click)="hideProductDialog()"></button>
+        <button pButton pRipple label="Save" icon="pi pi-check" class="p-button-text" 
+        (click)="selectedMedicamento ? updateMedicamento() : createMedicamento()"></button>
+    </ng-template>
+</p-dialog>
+
+<p-dialog [(visible)]="sellDialog" [style]="{ width: '450px' }" header="Venta Medicamento" [modal]="true" styleClass="p-fluid">
+    <ng-template pTemplate="content">
+        <label class="font-bold block mb-2">{{ selectedMedicamento?.nombre }}</label>
+        <div class="flex align-items-center justify-content-between">
+           
+            
+            <span class="p-input-icon-left">
+                <i class="pi pi-shopping-bag"></i>
+                <input pInputText type="number" [(ngModel)]="cantidad"
+                (ngModelChange)="limitarCantidad()" placeholder="Cantidad..." [max]="selectedMedicamento?.cantidad || 0" [min]="0"
+                pattern="\d*" inputmode="numeric" />
+            </span>
+            <small class="p-error" *ngIf="excedeLimite">Supera el límite de cantidad del producto</small>
+            
+        </div>
+        <p>Total: {{ total | currency:'COP' }}</p>
+    </ng-template>
+    <ng-template pTemplate="footer">
+        <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text" (click)="hideSellDialog()"></button>
+        <button pButton pRipple label="Save" icon="pi pi-check" class="p-button-text" (click)="selectedMedicamento && realizarVenta(selectedMedicamento)"></button>
+    </ng-template>
+</p-dialog>
+
+
+

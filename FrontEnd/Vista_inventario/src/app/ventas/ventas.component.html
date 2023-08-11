@@ -1,0 +1,69 @@
+<p-toast></p-toast>
+
+<p-table     
+    #dt
+    [value]="inventario"
+    [rows]="10"
+    [paginator]="true"
+    [rowsPerPageOptions]="[10, 25, 50]"
+    [globalFilterFields]="['fechaVenta', 'idMedicamento', 'cantidad', 'valorUnitario', 'valorTotal']"
+    [tableStyle]="{ 'min-width': '75rem' }"
+    [rowHover]="true"
+    dataKey="id"
+    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+    [showCurrentPageReport]="true">
+    <ng-template pTemplate="caption">
+        <div class="flex align-items-center justify-content-between">
+            <h3 class="m-0">Manejo de Ventas</h3>
+            <div>
+            <p-button label="Filtro Fecha" icon="pi pi-filter" styleClass="p-button-rounded p-button-info" (click)="showFilterDialog()"></p-button>
+            <p-button icon="pi pi-times" styleClass="p-button-rounded p-button-danger" (click)="limpiarFiltro()"></p-button>
+            </div>
+            <span class="p-input-icon-left">
+                <i class="pi pi-search"></i>
+                <input pInputText type="text" [(ngModel)]="searchTerm" (input)="dt.filterGlobal(searchTerm, 'contains')" placeholder="Buscar en Tabla..." />
+
+            </span>
+        </div>
+    </ng-template>
+    <ng-template pTemplate="header">
+        <tr>
+            <th pSortableColumn="fechaVenta">Fecha Venta<p-sortIcon field="fechaVenta"></p-sortIcon></th>
+            <th pSortableColumn="idMedicamento">Id Medicamento<p-sortIcon field="idMedicamento"></p-sortIcon></th>
+            <th pSortableColumn="cantidad">Cantidad<p-sortIcon field="cantidad"></p-sortIcon></th>
+            <th pSortableColumn="valorUnitario">Valor Unitario<p-sortIcon field="valorUnitario"></p-sortIcon></th>
+            <th pSortableColumn="valorTotal">Valor Total<p-sortIcon field="valorTotal"></p-sortIcon></th>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-inventario>
+        <tr>
+            <td>{{ inventario.fechaVenta }}</td>
+            <td>{{ inventario.idMedicamento }}</td>
+            <td>{{ inventario.cantidad }}</td>
+            <td>{{ inventario.valorUnitario }}</td>
+            <td>{{ inventario.valorTotal }}</td>
+        </tr>
+    </ng-template>
+</p-table>
+
+<p-dialog [(visible)]="filterDialog" [style]="{ width: '450px' }" header="Filtro Rango de fechas" [modal]="true" [appendTo]="'body'" styleClass="p-fluid">
+    <ng-template pTemplate="content">
+        <div class="flex align-items-center justify-content-between">
+
+            <label class="font-bold block mb-2" for="desde">Desde</label>
+            <p-calendar id="desde" [appendTo]="'body'" [(ngModel)]="fechaFrom"></p-calendar>
+        </div>
+        <div style="margin-bottom: 20px;"></div>
+        <div class="flex align-items-center justify-content-between">
+           
+
+            <label class="font-bold block mb-2" for="hasta">Hasta</label>
+            <p-calendar id="hasta"  [appendTo]="'body'" [(ngModel)]="fechaTo"></p-calendar>
+            
+        </div>
+    </ng-template>
+    <ng-template pTemplate="footer">
+        <button pButton pRipple label="Cancelar" icon="pi pi-times" class="p-button-text" (click)="hidefilterDialog()" ></button>
+        <button pButton pRipple label="Buscar" icon="pi pi-search" class="p-button-text" (click)="filtrarVentasPorFechas()"></button>
+    </ng-template>
+</p-dialog>
