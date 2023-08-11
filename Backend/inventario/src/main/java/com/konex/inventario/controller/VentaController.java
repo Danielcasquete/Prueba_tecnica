@@ -58,7 +58,7 @@ public class VentaController {
                 });
     }
 
-    @PutMapping("/HacerVenta/{id}/{quantity}")
+    @PostMapping("/HacerVenta/{id}/{quantity}")
     public Mono<ResponseEntity<Venta>> confirmSale(@PathVariable("id") Long id, @PathVariable("quantity") Integer quantity) {
         String url = "/api/Medicamentos/" + id;
 
