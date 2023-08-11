@@ -26,7 +26,7 @@ public class Venta {
     private int cantidad;
     @NotNull(message = "Valor unitario no deberia estar vacio")
     private Double valorUnitario;
-    @NotNull(message = "Valor unitario no deberia estar vacio")
+    @NotNull(message = "Valor total no deberia estar vacio")
     private Double valorTotal;
 
     @PrePersist

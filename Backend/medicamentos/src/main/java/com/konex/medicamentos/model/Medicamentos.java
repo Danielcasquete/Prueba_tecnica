@@ -2,6 +2,7 @@ package com.konex.medicamentos.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
@@ -29,7 +30,7 @@ public class Medicamentos {
     @JsonFormat(pattern="yyyy-MM-dd")
     @Temporal(TemporalType.DATE)
     private Calendar fechaVencimiento;
-    @NotNull(message = "cantidad no deberia estar vacio")
+    @Min(value = 0, message = "La cantidad debe ser igual o mayor a cero")
     private int cantidad;
     @NotNull(message = "Valor unitario no deberia estar vacio")
     private Double valorUnitario;
